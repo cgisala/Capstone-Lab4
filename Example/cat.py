@@ -36,4 +36,13 @@ holly.save()
 fluffy = Cat(name="Fluffy", color='Black', age=1)
 fluffy.save()
 
+print('\nFind all cats')
+
+cats = Cat.select()
+
+for cat in cats:
+    print(cat)
+
+
+
 
