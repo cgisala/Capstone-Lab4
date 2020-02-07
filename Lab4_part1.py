@@ -22,13 +22,13 @@ def main():
 
         menuOption = input('What is your choice? ')
 
-        if menuOption == '1\n':
+        if menuOption == '1':
             add_record()
-        elif menuOption == '2\n':
+        elif menuOption == '2':
             pass
-        elif menuOption == '3\n':
+        elif menuOption == '3':
             pass
-        elif menuOption == '4\n':
+        elif menuOption == '4':
             pass
         else:
             print('\nYour choice is not in the menu')
