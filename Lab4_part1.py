@@ -8,7 +8,7 @@ to the chainsaw juggling database
 """
 import sqlite3
 
-# db_url = 'chainsaw_juggling.sqlite'  # Assumes the table record_holders have already been created.
+db= 'chainsaw_juggling.sqlite'  # Assumes the table record_holders have already been created.
 
 def main():
     choice = True
@@ -24,13 +24,13 @@ def main():
         menuOption = input('What is your choice? ')
 
         if menuOption == '1':
-            add_record()
+            add_record(db)
         elif menuOption == '2':
-            update_record()
+            update_record(db)
         elif menuOption == '3':
-            pass
+            delete_record(db)
         elif menuOption == '4':
-            search_database()
+            search_database(db)
         else:
             print('\nYour choice is not in the menu')
 
@@ -45,6 +45,7 @@ def main():
             conn = sqlite3.connect('chainsaw_juggling.sqlite')
             cur = conn.execute('select * from record_holders')
 
+            print('\n**Chainsaw Juggling Record Holders**\n')
             for row in cur:
                 print(row)
 
@@ -53,9 +54,8 @@ def main():
 
             
 
-def add_record():
-    # Creates or opens connection to db file
-    conn = sqlite3.connect('chainsaw_juggling.sqlite')
+def add_record(db):
+    conn = sqlite3.connect(db) # Creates or opens connection to db file
 
     #Ask the user for information about the juggler
     name = input('Enter the name of the juggler: ')
@@ -64,44 +64,44 @@ def add_record():
 
     # Parameters
     conn.execute('insert into record_holders values (?,?,?)', (name, country, numOfCatches))
+    conn.commit()  # Saves changes to database
+    conn.close()  # Close connection
 
-    # Saves changes to database
-    conn.commit()
-
-    # Close connection
-    conn.close()
-
-
-
-def update_record():
+def update_record(db):
     
     # User enters the name of the jugglers
     name = input('\nEnter the name of the juggler: ')
     numOfCatches = int(input('\nEnter the number of catches: '))
 
-    # Creates or opens connection to db file
-    conn = sqlite3.connect('chainsaw_juggling.sqlite')
+    conn = sqlite3.connect(db)  # Creates or opens connection to db file
 
+    # Updates the number of catches of a juggler
     conn.execute('''Update record_holders SET number_of_catches = ? WHERE name = ?''',(numOfCatches, name))
+    conn.commit() # Saves changes to database
+    conn.close() # Close connection
 
-    # Saves changes to database
-    conn.commit()
+def delete_record(db):
 
-    # Close connection
-    conn.close()
+    #Prompts the user for the name to delete from record
+    name = input('\nEnter the name to be deleted: ')
 
-def delete_record():
-    pass
+    conn = sqlite3.connect(db)   # Creates or opens connectiion to db file
+    curs = conn.cursor()
+    curs.execute("DELETE FROM record_holders WHERE name = (?)", (name,))
+    conn.commit() #Saves changes to database
+    conn.close() #Close Connection
+    
 
-def search_database():
+
+
+def search_database(db):
 
     # User enters the data to be searched by name
     name = input('\nEnter the name of the juggler: ')
 
     get_record_by_name = "SELECT name, * FROM record_holders WHERE name = ?"
 
-    # Creates or opens connection to db file
-    conn = sqlite3.connect('chainsaw_juggling.sqlite')
+    conn = sqlite3.connect(db)  # Creates or opens connection to db file
 
     conn.row_factory = sqlite3.Row # This row_factory allows access to data by row name
     rows = conn.execute(get_record_by_name, (name,) )
@@ -111,9 +111,7 @@ def search_database():
 
     # Prints the jugglers data
     print(juggler_data['name'], juggler_data['country'], juggler_data['number_of_catches'])
-
-    # Close connection
-    conn.close()
+    conn.close()     # Close connection
 
 if __name__=='__main__':
     main()
