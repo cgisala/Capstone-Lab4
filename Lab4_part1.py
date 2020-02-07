@@ -25,7 +25,7 @@ def main():
         if menuOption == '1':
             add_record()
         elif menuOption == '2':
-            pass
+            search_database()
         elif menuOption == '3':
             pass
         elif menuOption == '4':
@@ -76,7 +76,26 @@ def delete_record():
     pass
 
 def search_database():
-    pass
+
+    # User enters the data to be searched by name
+    name = input('\nEnter the name of the juggler: ')
+
+    get_record_by_name = "SELECT name, * FROM record_holders WHERE name = ?"
+
+    # Creates or opens connection to db file
+    conn = sqlite3.connect('chainsaw_juggling.sqlite')
+
+    conn.row_factory = sqlite3.Row # This row_factory allows access to data by row name
+    rows = conn.execute(get_record_by_name, (name,) )
+    juggler_data = rows.fetchone() #Get first result
+
+    print('\nJuggler Data:')
+
+    # Prints the jugglers data
+    print(juggler_data['name'], juggler_data['country'], juggler_data['number_of_catches'])
+
+    # Close connection
+    conn.close()
 
 if __name__=='__main__':
     main()
