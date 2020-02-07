@@ -62,7 +62,7 @@ def add_record(db):
     country = input('Enter the name of the country the juggler is from: ')
     numOfCatches = input('Enter the number of catches of the juggler: ')
 
-    # Parameters
+    # Inserts name, country, and number of catches in the databse
     conn.execute('insert into record_holders values (?,?,?)', (name, country, numOfCatches))
     conn.commit()  # Saves changes to database
     conn.close()  # Close connection
@@ -99,6 +99,7 @@ def search_database(db):
     # User enters the data to be searched by name
     name = input('\nEnter the name of the juggler: ')
 
+    # Gets the record from the database by name
     get_record_by_name = "SELECT name, * FROM record_holders WHERE name = ?"
 
     conn = sqlite3.connect(db)  # Creates or opens connection to db file
