@@ -20,24 +20,28 @@ def main():
         '3: delete record\n'
         '4: search database\n')
 
+        # Prompts the user to enter the choice form the menu
         menuOption = input('What is your choice? ')
 
         if menuOption == '1':
             add_record()
         elif menuOption == '2':
-            search_database()
+            update_record()
         elif menuOption == '3':
             pass
         elif menuOption == '4':
-            pass
+            search_database()
         else:
             print('\nYour choice is not in the menu')
 
+        # Asks the user of he or she wants to continue 
         userChoice = input('\nDo you wish to continue? y or n: ')
         if userChoice.lower() == 'y':
             choice = True
         else:
             choice = False
+
+            # Prints all the data in the table
             conn = sqlite3.connect('chainsaw_juggling.sqlite')
             cur = conn.execute('select * from record_holders')
 
@@ -70,7 +74,21 @@ def add_record():
 
 
 def update_record():
-    pass
+    
+    # User enters the name of the jugglers
+    name = input('\nEnter the name of the juggler: ')
+    numOfCatches = int(input('\nEnter the number of catches: '))
+
+    # Creates or opens connection to db file
+    conn = sqlite3.connect('chainsaw_juggling.sqlite')
+
+    conn.execute('''Update record_holders SET number_of_catches = ? WHERE name = ?''',(numOfCatches, name))
+
+    # Saves changes to database
+    conn.commit()
+
+    # Close connection
+    conn.close()
 
 def delete_record():
     pass
